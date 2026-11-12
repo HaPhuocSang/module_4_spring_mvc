@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý sản phẩm</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/bootstrap-5.3.8-dist/css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Quản lý sản phẩm</h2>
+            <p class="text-muted">Danh sách sản phẩm hiện có</p>
+        </div>
+        <a th:href="@{/create}" class="btn btn-primary">+ Thêm sản phẩm</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}">
+    </div>
+    <div class="card search-card p-3 mb-4">
+        <form th:action="@{/search}" method="get" class="d-flex gap-2" >
+            <label for="keyword" style="display: none"></label>
+            <input id="keyword" type="text" name="keyword" class="form-control" placeholder="Nhập tên sản phẩm cần tìm..." th:value="${keyword}">
+            <button type="submit" class="btn btn-dark">Tìm kiếm</button>
+            <a th:href="@{/}" class="btn btn-secondary">Làm mới</a>
+        </form>
+    </div>
+    <div class="card p-3">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th>STT</th>
+                    <th>Tên sản phẩm</th>
+                    <th>Giá sản phẩm</th>
+                    <th>Nhà sản xuất</th>
+                    <th>Mô tả</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product, var : ${products}">
+                    <td th:text="${var.count}"></td>
+                    <td th:text="${product.productName}"></td>
+                    <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">
+                    </td>
+                    <td th:text="${product.manufacturer}"></td>
+                    <td th:text="${product.description}" class="description-cell"></td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a th:href="@{/{id}/detail(id=${product.id})}" class="btn btn-info btn-sm text-white">Chi tiết</a>
+                            <a th:href="@{/{id}/edit(id=${product.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" th:onclick="'getProductId(' + ${product.id} + ')'">Xóa</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="6" class="text-center text-muted p-4">
+                        Không tìm thấy sản phẩm nào!
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <form th:action="@{/delete}" method="post">
+        <input type="hidden"  name="productId" id="productId">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Xác nhận xóa</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Bạn có muốn xóa sản phẩm này?
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/bootstrap-5.3.8-dist/js/bootstrap.bundle.js}"></script>
+<script>
+    function getProductId(id){
+        document.getElementById("productId").value = id;
+    }
+</script>
+</body>
+</html>
