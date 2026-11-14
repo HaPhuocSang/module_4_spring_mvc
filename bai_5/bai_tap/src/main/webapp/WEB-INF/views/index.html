@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/layout/layout :: head('Danh sách blog')}">
+    <title></title>
+</head>
+<body>
+<aside th:replace="~{/layout/layout :: aside}"></aside>
+<main class="main">
+    <div class="page-header">
+        <div>
+            <h3 class="fw-bold">Bài viết của tôi</h3>
+            <p class="text-secondary">Quản lý và chia sẻ những câu chuyện của bạn.</p>
+        </div>
+        <a th:href="@{/create}" class="btn-create">+ Viết bài mới</a>
+    </div>
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-xl-4"
+             th:each="blog : ${blogList}">
+            <div class="blog-card">
+                <h5 th:text="${blog.getTitle()}"></h5>
+                <p class="blog-description"
+                   th:text="${#strings.abbreviate(blog.getContent, 120)}">
+                </p>
+                <div class="blog-date">
+                    Ngày tạo:
+                    <span th:text="${#temporals.format(blog.getCreatedAt, 'dd/MM/yyyy HH:mm')}"></span>
+                </div>
+                <div class="blog-actions">
+                    <a th:href="@{/{id}/detail(id=${blog.getId})}" class="btn btn-sm btn-outline-primary">Xem</a>
+                    <a th:href="@{/{id}/edit(id=${blog.getId})}" class="btn btn-sm btn-outline-success">Sửa</a>
+                    <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" th:attr="data-id=${blog.id}">Xóa</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-12" th:if="${#lists.isEmpty(blogList)}">
+            <div class="text-center text-secondary py-5">
+                <h5>Chưa có bài viết nào!</h5>
+                <p>Hãy bắt đầu viết blog đầu tiên của bạn.</p>
+                <a th:href="@{/create}" class="btn-create">Viết bài mới</a>
+            </div>
+        </div>
+    </div>
+</main>
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content text-center">
+            <div class="modal-body p-4">
+                <div class="fs-1 mb-3">🗑️</div>
+                <h5 class="fw-bold">Xác nhận xóa?</h5>
+                <p class="text-secondary">
+                    Bạn có chắc chắn muốn xóa bài viết này không?
+                    Hành động này không thể hoàn tác.
+                </p>
+                <form th:action="@{/delete}" method="post">
+                    <input type="hidden" name="id" id="deleteBlogId">
+                    <div class="d-flex gap-2 justify-content-center mt-4">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Thoát</button>
+                        <button type="submit" class="btn btn-danger px-4">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const blogId = button.getAttribute('data-id');
+        document.getElementById('deleteBlogId').value = blogId;
+    });
+</script>
+
+</body>
+</html>

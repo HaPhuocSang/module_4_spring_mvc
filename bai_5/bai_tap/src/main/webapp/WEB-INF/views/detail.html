@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/layout/layout :: head('Xem chi tiết blog')}">
+    <title></title>
+</head>
+<body>
+<aside th:replace="~{/layout/layout :: aside}"></aside>
+<main class="main">
+    <div class="page-header">
+        <div>
+            <h3 class="fw-bold">Chi tiết bài viết</h3>
+            <p class="text-secondary">Nội dung bài Blog của bạn.</p>
+        </div>
+        <a th:href="@{/}" class="btn btn-light">
+            ← Quay lại
+        </a>
+    </div>
+    <div class="detail-container">
+        <h2 class="fw-bold" th:text="${blog.title}"></h2>
+        <div class="text-secondary mt-3">
+            Ngày tạo:
+            <span th:text="${#temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+        </div>
+        <div class="text-secondary mt-2">
+            Ngày cập nhật:
+            <span th:text="${blog.updatedAt != null ?
+                #temporals.format(blog.updatedAt, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}">
+            </span>
+        </div>
+        <hr>
+        <div class="detail-content" th:text="${blog.content}"></div>
+        <hr>
+        <div class="d-flex gap-2">
+            <a th:href="@{/{id}/edit(id=${blog.id})}" class="btn btn-success">Chỉnh sửa</a>
+            <a th:href="@{/}" class="btn btn-light">Quay lại danh sách</a>
+        </div>
+    </div>
+</main>
+</body>
+</html>
