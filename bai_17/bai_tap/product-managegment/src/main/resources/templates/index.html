@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/layout :: head('Quản lý sản phẩm')}">
+    <title></title>
+</head>
+<body>
+<div class="container">
+    <div th:if="${message}" class="alert" th:text="${message}"></div>
+    <div class="header">
+        <h1>Quản lý sản phẩm</h1>
+        <a th:href="@{/create}" class="btn btn-primary">
+            + Thêm sản phẩm
+        </a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Mô tả</th>
+            <th>Nhà sản xuất</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product, var : ${products}">
+            <td th:text="${var.count}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+            <td th:text="${product.description}"></td>
+            <td th:text="${product.manufacturer}"></td>
+            <td>
+                <a th:href="@{/{id}/edit(id=${product.id})}" class="btn btn-edit">Sửa</a>
+                <button type="button" class="btn btn-delete" th:attr="data-id=${product.id},data-name=${product.name}" onclick="confirmDelete(this)">Xóa</button>
+            </td>
+        </tr>
+        <tr th:if="${#lists.isEmpty(products)}">
+            <td colspan="6" class="empty">Chưa có sản phẩm nào!</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <h2>Xác nhận xóa</h2>
+        <p>
+            Bạn có chắc chắn muốn xóa sản phẩm
+            <strong id="productName"></strong> không?
+        </p>
+        <form th:action="@{/delete}" method="post">
+            <input type="hidden" name="id" id="productId">
+            <div class="modal-actions">
+                <button type="submit" class="btn btn-delete">Xác nhận xóa</button>
+                <button type="button" class="btn btn-cancel" onclick="closeModal()">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script th:replace="~{/layout/layout :: script}"></script>
+</body>
+</html>

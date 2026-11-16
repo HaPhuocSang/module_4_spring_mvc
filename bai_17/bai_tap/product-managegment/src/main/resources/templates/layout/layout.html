@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <title th:text="${title}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<script th:fragment="script">
+    function confirmDelete(button) {
+        const id = button.getAttribute("data-id");
+        const name = button.getAttribute("data-name");
+
+        document.getElementById("productId").value = id;
+        document.getElementById("productName").textContent = name;
+
+        document.getElementById("deleteModal").style.display = "flex";
+    }
+    function closeModal() {
+        document.getElementById("deleteModal").style.display = "none";
+    }
+    window.onclick = function(event) {
+        const modal = document.getElementById("deleteModal");
+
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+
+    setTimeout(function() {
+        const message = document.querySelector(".alert");
+
+        if (message) {
+            message.style.transition = "opacity 0.5s";
+            message.style.opacity = "0";
+
+            setTimeout(() => message.remove(), 500);
+        }
+    }, 3000);
+</script>
+</body>
+</html>

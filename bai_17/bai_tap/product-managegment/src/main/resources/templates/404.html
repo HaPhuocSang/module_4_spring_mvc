@@ -1,0 +1,15 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/layout/layout :: head('Không tìm thấy')}">
+    <title></title>
+</head>
+<body>
+<div class="error-container">
+    <div class="error-code">404</div>
+    <h1>Không tìm thấy sản phẩm!</h1>
+    <p>Sản phẩm bạn đang tìm kiếm không tồn tại.</p>
+    <a th:href="@{/}" class="btn btn-primary">Quay lại danh sách</a>
+</div>
+</body>
+</html>

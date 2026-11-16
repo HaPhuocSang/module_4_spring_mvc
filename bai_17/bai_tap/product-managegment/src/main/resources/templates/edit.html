@@ -1,0 +1,29 @@
+
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{/layout/layout :: head('Cập nhật sản phẩm')}">
+    <title></title>
+</head>
+<body>
+
+<div class="form-container">
+    <h1>Cập nhật sản phẩm</h1>
+    <form th:action="@{/edit}" th:object="${product}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <label for="name">Tên sản phẩm</label>
+        <input id="name" type="text" th:field="*{name}" placeholder="Nhập tên sản phẩm" required>
+        <label for="price">Giá sản phẩm</label>
+        <input id="price" type="number" th:field="*{price}" min="0" step="any" required>
+        <label for="description">Mô tả sản phẩm</label>
+        <textarea id="description" th:field="*{description}" placeholder="Nhập mô tả"></textarea>
+        <label for="manufacturer">Nhà sản xuất</label>
+        <input id="manufacturer" type="text" th:field="*{manufacturer}" placeholder="Nhập nhà sản xuất" required>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
+            <a th:href="@{/}" class="btn btn-cancel">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
