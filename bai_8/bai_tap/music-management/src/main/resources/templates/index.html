@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout :: head('Danh sách bài hát')}">
+    <title></title>
+</head>
+<body>
+<nav th:replace="~{layout :: navbar}"></nav>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Quản lý bài hát</h2>
+        <a th:href="@{/create}" class="btn btn-primary">+ Thêm bài hát</a>
+    </div>
+    <div th:if="${message != null}"
+         class="alert alert-success alert-dismissible fade show">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                <tr>
+                    <th>STT</th>
+                    <th>Tên bài hát</th>
+                    <th>Nghệ sĩ</th>
+                    <th>Thể loại</th>
+                    <th>Chức năng</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="music, status : ${musicDtoPage.content}">
+                    <td th:text="${musicDtoPage.number * musicDtoPage.size + status.index + 1}"></td>
+                    <td th:text="${music.songTitle}"></td>
+                    <td th:text="${music.performingArtist}"></td>
+                    <td th:text="${music.musicGenre}"></td>
+                    <td>
+                        <a th:href="@{/{id}/update(id=${music.id})}" class="btn btn-warning btn-sm">Sửa</a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" th:attr="data-id=${music.id}, data-name=${music.songTitle}">Xóa</button>
+                    </td>
+                </tr>
+                <tr th:if="${musicDtoPage.isEmpty()}">
+                    <td colspan="5" class="text-center">Chưa có bài hát nào!</td>
+                </tr>
+                </tbody>
+            </table>
+            <nav th:if="${musicDtoPage.totalPages > 1}">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${musicDtoPage.first} ? 'disabled'">
+                        <a class="page-link" th:href="@{/(page=${musicDtoPage.number - 1}, size=${musicDtoPage.size})}">Trước</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, musicDtoPage.totalPages - 1)}" th:classappend="${i == musicDtoPage.number} ? 'active'">
+                        <a class="page-link" th:href="@{/(page=${i},size=${musicDtoPage.size})}" th:text="${i + 1}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${musicDtoPage.last} ? 'disabled'">
+                        <a class="page-link" th:href="@{/(page=${musicDtoPage.number + 1}, size=${musicDtoPage.size})}">Tiếp</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Xác nhận xóa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Bạn có chắc chắn muốn xóa bài hát:
+                <strong id="musicName"></strong> ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <form th:action="@{/delete}" method="post">
+                    <input type="hidden" name="id" id="musicId">
+                    <button type="submit" class="btn btn-danger">Xác nhận xóa</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:replace="~{layout :: footer}"></footer>
+<div th:replace="~{layout :: scripts}"></div>
+</body>
+</html>

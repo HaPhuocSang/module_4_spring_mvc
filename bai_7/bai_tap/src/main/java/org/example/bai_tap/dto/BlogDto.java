@@ -3,9 +3,8 @@ package org.example.bai_tap.dto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,8 +16,8 @@ public class BlogDto {
     private String title;
     @NotBlank(message = "Vui lòng nhập nội dung bài viết!")
     private String content;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     @NotNull(message = "Vui lòng chọn loại bài viết!")
     private Long categoryId;
     private String categoryName;

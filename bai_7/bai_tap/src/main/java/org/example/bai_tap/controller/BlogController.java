@@ -62,7 +62,6 @@ public class BlogController {
         model.addAttribute("direction", direction);
         model.addAttribute("keyword", "");
         return "blog/index";
-
     }
 
     @GetMapping("{id}/detail")

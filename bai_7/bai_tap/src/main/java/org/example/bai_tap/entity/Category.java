@@ -20,6 +20,4 @@ public class Category {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @OneToMany(mappedBy = "category")
-    private List<Blog> blogs;
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "blogs")
@@ -22,13 +22,24 @@ public class Blog {
     private String title;
     @Column(name = "content", nullable = false, columnDefinition = "longtext")
     private String content;
-    @Column(name = "created_at", columnDefinition = "datetime default current_timestamp")
-    private LocalDate createdAt;
-    @Column(name = "updated_at", columnDefinition = "datetime default current_timestamp on update current_timestamp")
-    private LocalDate updatedAt;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 
     public Blog(Long id, String title, String content, Category category) {
         this.id = id;

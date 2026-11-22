@@ -61,7 +61,7 @@ public class BlogService implements IBlogService {
         if (blogDto.getId() != null) {
             return false;
         }
-        blogRepository.save(blogDtoToBlogConverter.convert(blogDto));
+        blogRepository.save(Objects.requireNonNull(blogDtoToBlogConverter.convert(blogDto)));
         return true;
     }
 
