@@ -1,10 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Thư viện sách</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-$END$
+<header class="header">
+    <div class="logo">BOOK LIBRARY</div>
+    <nav>
+        <a th:href="@{/}">Trang chủ</a>
+        <a th:href="@{/return}">Trả sách</a>
+    </nav>
+</header>
+<main class="container">
+    <h2 class="page-title">Danh sách đầu sách</h2>
+    <div class="book-list">
+        <div class="book-card" th:each="book : ${books.content}">
+            <h3 th:text="${book.title}"></h3>
+            <p>Tác giả:<span th:text="${book.author}"></span></p>
+            <p>Số lượng còn:<strong th:text="${book.quantity}"></strong></p>
+            <span th:if="${book.quantity > 0}" class="status status-available">Còn sách</span>
+            <span th:if="${book.quantity <= 0}" class="status status-empty">Hết sách</span>
+            <br><br>
+            <a class="btn" th:href="@{/{id}/books(id=${book.id})}">Xem chi tiết</a>
+        </div>
+    </div>
+    <p th:if="${books.isEmpty()}">Thư viện chưa có đầu sách nào.</p>
+    <div class="pagination">
+        <a class="btn btn-secondary" th:if="${books.hasPrevious()}" th:href="@{/(page=${books.number - 1})}">Trang trước</a>
+        <span th:text="${books.number + 1}"></span>
+        <a class="btn btn-secondary" th:if="${books.hasNext()}" th:href="@{/(page=${books.number + 1})}">Trang sau</a>
+    </div>
+</main>
 </body>
 </html>

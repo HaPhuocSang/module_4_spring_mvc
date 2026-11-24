@@ -1,10 +1,27 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trả sách thành công</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-$END$
+<header class="header">
+    <div class="logo">Library Management</div>
+    <nav>
+        <a th:href="@{/}">Trang chủ</a>
+        <a th:href="@{/return}">Trả sách</a>
+    </nav>
+</header>
+<main class="container">
+    <div class="success-card">
+        <h2>Trả sách thành công!</h2>
+        <p>Sách đã được trả lại thư viện.</p>
+        <p>Mã mượn:<strong th:text="${borrowCode}">12345</strong></p>
+        <a th:href="@{/}" class="btn">Về trang chủ</a>
+    </div>
+</main>
 </body>
 </html>

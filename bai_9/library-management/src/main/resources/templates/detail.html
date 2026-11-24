@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Chi tiết sách</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-$END$
+<header class="header">
+    <div class="logo">BOOK LIBRARY</div>
+    <a th:href="@{/}">Trang chủ</a>
+</header>
+<main class="container">
+    <div class="detail-card">
+        <a th:href="@{/}">← Quay lại</a>
+        <h2 th:text="${book.title}"></h2>
+        <p>Tác giả:<span th:text="${book.author}"></span></p>
+        <p th:text="${book.description}"></p>
+        <p>Số lượng còn:<strong th:text="${book.quantity}"></strong></p>
+        <form th:if="${book.quantity > 0}" th:action="@{/{id}/books/borrow(id=${book.id})}" method="post">
+            <button class="btn" type="submit">Mượn sách ngay</button>
+        </form>
+        <span th:if="${book.quantity <= 0}" class="status status-empty">Sách đã hết</span>
+    </div>
+</main>
 </body>
 </html>

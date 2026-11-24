@@ -1,10 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title}">BlogSpace</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
 <body>
 <header th:fragment="header" class="site-header">
     <div class="container nav-wrap">
-        <a class="brand" th:href="@{/}"><span class="brand-mark">B</span>BlogSpace</a>
+        <a class="brand" th:href="@{/}">
+            <span class="brand-mark">B</span>BlogSpace
+        </a>
         <nav>
             <a th:href="@{/}">Bài viết</a>
             <a th:href="@{/categories}">Danh mục</a>
