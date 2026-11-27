@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BlogSpace - Bài viết</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{layout/layout :: header}"></header>
+<main class="container page">
+    <section class="hero">
+        <div>
+            <span class="eyebrow">BLOG & KNOWLEDGE</span>
+            <h1>Góc chia sẻ <span>kiến thức</span></h1>
+            <p>Khám phá những bài viết thú vị và chia sẻ góc nhìn của bạn.</p>
+        </div>
+        <div class="hero-art">✦</div>
+    </section>
+    <div th:if="${message}" class="alert" th:text="${message}"></div>
+    <section class="toolbar">
+        <form th:action="@{/search}" method="get" class="search-form">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm kiếm bài viết...">
+            <input type="hidden" name="direction" th:value="${direction}">
+            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+        </form>
+        <div class="filters">
+            <form method="get" th:action="${categoryId != null ? categoryId + '/category/' : (keyword != null and !keyword.isEmpty() ? '/search' : '/')}">
+                <input th:if="${keyword != null and !keyword.isEmpty()}" type="hidden" name="keyword" th:value="${keyword}">
+                <select name="direction" onchange="this.form.submit()">
+                    <option value="desc" th:selected="${direction == 'desc'}">Mới nhất</option>
+                    <option value="asc" th:selected="${direction == 'asc'}">Cũ nhất</option>
+                </select>
+                <select name="size" onchange="this.form.submit()">
+                    <option value="6" th:selected="${size == 6}">6 bài / trang</option>
+                    <option value="9" th:selected="${size == 9}">9 bài / trang</option>
+                    <option value="12" th:selected="${size == 12}">12 bài / trang</option>
+                </select>
+            </form>
+        </div>
+    </section>
+    <section class="category-strip">
+        <a th:href="@{/}" th:classappend="${categoryId == null ? ' active' : ''}">Tất cả</a>
+        <a th:each="category : ${categories}" th:href="@{/{id}/category(id=${category.id})}" th:text="${category.name}" th:classappend="${categoryId != null and categoryId == category.id ? ' active' : ''}"></a>
+    </section>
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">KHÁM PHÁ</span>
+            <h2>Bài viết mới nhất</h2>
+        </div>
+        <span class="muted" th:text="${blogs.totalElements + ' bài viết'}"></span>
+    </div>
+    <div th:if="${blogs.isEmpty()}" class="empty-state">
+        <div class="empty-icon">✎</div>
+        <h3>Chưa có bài viết nào</h3>
+        <p>Hãy thử từ khóa khác hoặc tạo bài viết đầu tiên.</p>
+        <a class="btn btn-primary" th:href="@{/create}">Tạo bài viết</a>
+    </div>
+    <section class="blog-grid" th:unless="${blogs.isEmpty()}">
+        <article class="blog-card" th:each="blog, stat : ${blogs.content}">
+            <div class="card-top">
+                <span class="card-number" th:text="${'#' + (stat.index + 1 + blogs.number * blogs.size)}"></span>
+                <span class="category-pill" th:text="${blog.categoryName}"></span>
+            </div>
+            <h3><a th:href="@{/{id}/detail(id=${blog.id})}" th:text="${blog.title}"></a></h3>
+            <p class="excerpt" th:text="${#strings.abbreviate(blog.content, 145)}"></p>
+            <div class="card-footer">
+                <span>◷<span th:text="${blog.createdAt != null ? #temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm'): 'Chưa cập nhật'}"></span></span>
+                <a th:href="@{/{id}/detail(id=${blog.id})}">Đọc tiếp →</a>
+            </div>
+            <div class="card-actions">
+                <a th:href="@{/{id}/edit(id=${blog.id})}">Chỉnh sửa</a>
+                <form th:id="'delete-blog-' + ${blog.id}" th:action="@{/delete}" method="post">
+                    <input type="hidden" name="id" th:value="${blog.id}">
+                    <button type="button" class="link-danger js-delete" th:attr="data-form='delete-blog-' + ${blog.id}, data-name=${blog.title}">Xóa</button>
+                </form>
+            </div>
+        </article>
+    </section>
+    <nav class="pagination" th:if="${blogs.totalPages > 1}">
+        <a th:if="${blogs.hasPrevious()}" th:href="@{/(page=${blogs.number - 1},size=${size},direction=${direction})}" th:unless="${categoryId != null or (keyword != null and !keyword.isEmpty())}">← Trước</a>
+        <a th:if="${blogs.hasPrevious() and keyword != null and !keyword.isEmpty()}" th:href="@{/search(page=${blogs.number - 1},size=${size},direction=${direction},keyword=${keyword})}">← Trước</a>
+        <a th:if="${blogs.hasPrevious() and categoryId != null}" th:href="@{/{id}/category(id=${categoryId},page=${blogs.number - 1},size=${size},direction=${direction})}">← Trước</a>
+        <span th:each="i : ${#numbers.sequence(0, blogs.totalPages - 1)}">
+            <a th:if="${categoryId == null and (keyword == null or keyword.isEmpty())}" th:href="@{/(page=${i},size=${size},direction=${direction})}" th:text="${i + 1}" th:classappend="${i == blogs.number ? ' current' : ''}"></a>
+            <a th:if="${keyword != null and !keyword.isEmpty()}" th:href="@{/search(page=${i},size=${size},direction=${direction},keyword=${keyword})}" th:text="${i + 1}" th:classappend="${i == blogs.number ? ' current' : ''}"></a>
+            <a th:if="${categoryId != null}" th:href="@{/{id}/category(id=${categoryId},page=${i},size=${size},direction=${direction})}" th:text="${i + 1}" th:classappend="${i == blogs.number ? ' current' : ''}"></a>
+        </span>
+        <a th:if="${blogs.hasNext() and categoryId == null and (keyword == null or keyword.isEmpty())}" th:href="@{/(page=${blogs.number + 1},size=${size},direction=${direction})}">Sau →</a>
+        <a th:if="${blogs.hasNext() and keyword != null and !keyword.isEmpty()}" th:href="@{/search(page=${blogs.number + 1},size=${size},direction=${direction},keyword=${keyword})}">Sau →</a>
+        <a th:if="${blogs.hasNext() and categoryId != null}" th:href="@{/{id}/category(id=${categoryId},page=${blogs.number + 1},size=${size},direction=${direction})}">Sau →</a>
+    </nav>
+</main>
+<footer th:replace="~{layout/layout :: footer}"></footer>
+<div th:replace="~{layout/layout :: deleteModal}"></div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

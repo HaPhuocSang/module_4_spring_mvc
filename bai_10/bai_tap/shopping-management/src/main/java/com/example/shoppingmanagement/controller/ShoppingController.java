@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/shopping-cart")
@@ -46,7 +45,7 @@ public class ShoppingController {
         return "redirect:/shopping-cart";
     }
     @PostMapping("/update")
-    public String updateCart(@RequestParam Long productId, @RequestParam Integer quantity, @SessionAttribute(value = "cart", required = false) Cart cart, Model model) {
+    public String updateCart(@RequestParam Long productId, @RequestParam Integer quantity, @SessionAttribute(value = "cart", required = false) Cart cart) {
         if (cart == null) {
             return "redirect:/";
         }

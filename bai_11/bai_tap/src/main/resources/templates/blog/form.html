@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý bài viết</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{layout/layout :: header}"></header>
+<main class="container narrow page">
+    <a class="back-link" th:href="@{/}">← Quay lại danh sách</a>
+    <div class="form-panel">
+        <span class="eyebrow">BLOGSPACE EDITOR</span>
+        <h1 th:text="${blog.id == null ? 'Tạo bài viết mới' : 'Chỉnh sửa bài viết'}">
+        </h1>
+        <p class="muted">Chia sẻ câu chuyện và kiến thức của bạn với mọi người.</p>
+        <form th:object="${blog}" th:action="${blog.id == null ? '/create' : '/edit'}" method="post" class="main-form">
+            <input type="hidden" th:field="*{id}">
+            <label for="title">Tiêu đề bài viết</label>
+            <input id="title" type="text" th:field="*{title}" placeholder="Nhập tiêu đề bài viết...">
+            <small class="field-error" th:errors="*{title}"></small>
+            <label for="categoryId">Danh mục</label>
+            <select id="categoryId" th:field="*{categoryId}">
+                <option value="">-- Chọn danh mục --</option>
+                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+            <small class="field-error" th:errors="*{categoryId}"></small>
+            <label for="content">Nội dung bài viết</label>
+            <textarea id="content" th:field="*{content}" rows="12" placeholder="Bắt đầu viết nội dung..."></textarea>
+            <small class="field-error" th:errors="*{content}"></small>
+            <div class="form-actions">
+                <a class="btn btn-light" th:href="@{/}">Hủy</a>
+                <button class="btn btn-primary" type="submit" th:text="${blog.id == null ? 'Đăng bài viết' : 'Lưu thay đổi'}"></button>
+            </div>
+        </form>
+    </div>
+</main>
+<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>

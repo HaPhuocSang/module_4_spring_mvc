@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${blog.title}"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header th:replace="~{layout/layout :: header}"></header>
+<main class="container narrow page">
+    <a class="back-link" th:href="@{/}">← Tất cả bài viết</a>
+    <article class="detail-panel">
+        <span class="category-pill" th:text="${blog.categoryName}"></span>
+        <h1 th:text="${blog.title}"></h1>
+        <div class="detail-meta">
+            <span>Ngày tạo:<b th:text="${blog.createdAt != null ? #temporals.format(blog.createdAt, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}"></b>
+            </span>
+            <span>Cập nhật:<b th:text="${blog.updatedAt != null ? #temporals.format(blog.updatedAt, 'dd/MM/yyyy HH:mm') : 'Chưa cập nhật'}"></b></span>
+        </div>
+        <div class="detail-content" th:text="${blog.content}"></div>
+        <div class="form-actions">
+            <a class="btn btn-light" th:href="@{/}">Quay lại</a>
+            <a class="btn btn-primary" th:href="@{/{id}/edit(id=${blog.id})}">Chỉnh sửa bài viết</a>
+        </div>
+    </article>
+</main>
+<footer th:replace="~{layout/layout :: footer}"></footer>
+</body>
+</html>
